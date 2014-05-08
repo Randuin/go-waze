@@ -10,18 +10,18 @@ import (
   "bytes"
 )
 
-type WazeRequest struct {
+type Request struct {
   From *Coord
   To *Coord
 }
 
-func (request WazeRequest) GetResponse() *WazeResponse {
+func (request Request) GetResponse() *Response {
   resp, _ := http.Get(request.BuildURL())
-  response := WazeResponseConstructor(resp)
+  response := ResponseConstructor(resp)
   return response
 }
 
-func (request WazeRequest) BuildURL() string {
+func (request Request) BuildURL() string {
   str := fmt.Sprintf("https://www.waze.com/RoutingManager/routingRequest?from=%s&to=%s&at=0&returnJSON=true&returnGeometries=true&returnInstructions=true&timeout=60000&nPaths=3",
     request.From.MakeString(),
     request.To.MakeString())
@@ -30,14 +30,14 @@ func (request WazeRequest) BuildURL() string {
 }
 
 
-type WazeResponse struct {
+type Response struct {
   Alternatives []Alternative `json:"alternatives"`
 }
 
-func WazeResponseConstructor(response *http.Response) *WazeResponse {
+func ResponseConstructor(response *http.Response) *Response {
   str, _ := ioutil.ReadAll(response.Body)
   str = bytes.Replace(str, []byte("NaN"), []byte("null"), -1)
-  resp := &WazeResponse{}
+  resp := &Response{}
 
   json.Unmarshal(str, &resp)
   return resp
