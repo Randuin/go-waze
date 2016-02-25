@@ -67,7 +67,7 @@ type Coord struct {
 }
 
 func (c Coord) MakeString() string {
-	str := fmt.Sprintf("x:%f+y:%f", c.Lat, c.Lng)
+	str := fmt.Sprintf("x:%f+y:%f", c.Lng, c.Lat)
 	str = url.QueryEscape(str)
 	str = strings.Replace(str, "%2B", "+", 1)
 	return str
